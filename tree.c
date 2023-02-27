@@ -39,16 +39,14 @@ void build_huffman_tree()
       /********* INSERT YOUR CODE HERE *************/ 
 	int i;
 	for(i = 0; i < heapSize; i++){
-		huffman_tree_node* t_node; //not sure this is what it's asking or if the for loop is used to copy it
-		heapInit(); //?
+		//not sure this is what it's asking or if the for loop is used to copy it
 	} huffman_tree_node* t_node;
 	while(heapSize > 1){
 		HeapNode temp1[1] = DeleteMin();
 		HeapNode temp2[1] = DeleteMin();
 		create_node(heap[1].c, l, NULL);
-		//find parent
-		HeapInsert(heap[1].c, temp1[0] + temp1[0], heap[1],freq); //fix typeerror for getting parent
-	} HeapInsert(heap[1].c, t_node, heap[1].freq);
+		HeapInsert(NULL, NULL, temp1[0].freq + temp1[0].freq); //fix typeerror for getting parent
+	} huffman_tree = heap[0];
 }
  
 void print_huffman_tree(huffman_tree_node *root, int level)  {
