@@ -1,3 +1,8 @@
+// CSCI 2021 Project 1
+// Alex Harvey
+// Matthew Erickson-Cancino
+// February 2023
+
 #include "heap.h"
 
 HeapNode heap[256];
