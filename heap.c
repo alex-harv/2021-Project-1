@@ -52,7 +52,7 @@ void bubbleDown(int pos)
 
     if ((pos * 2) > heapSize)
     {
-        return; // TODO potential bug??
+        return;
     }
 
     if (heap[pos].freq < (*lChild(pos)).freq && heap[pos].freq < (*rChild(pos)).freq)
