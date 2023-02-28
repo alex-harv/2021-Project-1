@@ -76,7 +76,7 @@ void gen_code(huffman_tree_node *node, int pos)
 
 	if (node->right == NULL && node->left == NULL)
 	{
-		stringCopy(code_buffer, huffman_code[node->c]);
+		stringCopy(code_buffer, huffman_code[(int)node->c]);
 	}
 
 	code_buffer[pos] = NULL; // undoes temp data as we go up the tree

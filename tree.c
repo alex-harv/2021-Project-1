@@ -4,13 +4,9 @@
 // February 2023
 
 #include "heap.h"
-#include "tree.h"
 
-#ifndef CODE_H
-#define CODE_H
-
-char huffman_code[256][20];
-char code_buffer[20]; // store current location
+// The root to the Huffman tree
+huffman_tree_node *huffman_tree = NULL;
 
 /**********************************************************************************************
  *
@@ -18,68 +14,97 @@ char code_buffer[20]; // store current location
  *
  **********************************************************************************************/
 
-void init_code()
+/*
+ * Create a single tree node initialized with the given parameters
+ */
+huffman_tree_node *create_node(char c, huffman_tree_node *l, huffman_tree_node *r)
 {
-	int i;
-	for (i = 0; i < 256; i++)
-	{
-		huffman_code[i][0] = 0;
-	}
-}
+	huffman_tree_node *node = malloc(sizeof(huffman_tree_node));
 
-void print_code()
-{
-	printf("\n----------------\n  CODES BEGIN\n-----------------\n");
+	node->c = c;
+	node->left = l;
+	node->right = r;
 
-	for (int i = 0; i < 256; i++)
-	{
-		if (huffman_code[i][0] != 0)
-		{
-			if (isprint(i))
-				printf("%d (%c): %s\n", i, i, huffman_code[i]);
-			else
-				printf("%d (--): %s\n", i, huffman_code[i]);
-		}
-	}
-	printf("\n----------------\n  CODES END\n-----------------\n");
+	return node;
 }
 
 /*
- * Traverse the huffman tree and store the huffman codes in huffman_code.
- * You may use code_buffer as a temp variable to store partial results.
+ * Builds Huffman Tree
+ * 1. Step through the heap and initialize t_node with a new huffman tree node
+ * 2. Repeat while there are more than 1 elements in the heap:
+ *    2a. Remove two elements from the heap
+ *    2b. Create a new huffman tree node
+ *    2c. Reinsert a new heap element that is the parent of thw two deleted elements
+ * 3. The last element in the heap contains the root of the huffman tree
  */
 
-void stringCopy(char *src, char *dest)
+void build_huffman_tree()
 {
-	printf("%s\n", src);
-	for (int i = 0; i < 20; i++)
+	/********* INSERT YOUR CODE HERE *************/
+
+	int i = 1;
+	while (i <= heapSize)
 	{
-		dest[i] = src[i];
+		heap[i].t_node = create_node(heap[i].c, NULL, NULL);
+		i++;
+	}
+
+	while (1)
+	{
+		HeapNode OldNode1 = DeleteMin();
+		HeapNode OldNode2 = DeleteMin();
+		huffman_tree_node *tempnode = create_node(NULL, OldNode1.t_node, OldNode2.t_node);
+		HeapInsert(NULL, tempnode, OldNode1.freq + OldNode2.freq);
+		if (heapSize == 1)
+		{
+			huffman_tree = tempnode;
+			return;
+		}
 	}
 }
 
-void gen_code(huffman_tree_node *node, int pos)
+void print_huffman_tree(huffman_tree_node *root, int level)
 {
-	/******* INSERT YOUR CODE HERE **********/
+	int i;
 
-	if (node->left != NULL)
-	{
-		code_buffer[pos] = '0';
-		gen_code(node->left, pos + 1);
-	}
+	if (level == 0)
+		printf("\n----------------\n  TREE BEGIN\n-----------------\n");
 
-	if (node->right != NULL)
-	{
-		code_buffer[pos] = '1';
-		gen_code(node->right, pos + 1);
-	}
+	if (root == NULL)
+		return;
 
-	if (node->right == NULL && node->left == NULL)
-	{
-		stringCopy(code_buffer, huffman_code[node->c]);
-	}
+	for (i = 0; i < level; i++)
+		printf("   ");
 
-	code_buffer[pos] = NULL; // we go up the tree when function is over, update the temp array
+	if (root->left != NULL || root->right != NULL)
+		printf("Node (I)\n");
+	else if (isprint(root->c))
+		printf("Node %d(%c)\n", root->c, root->c);
+	else
+		printf("Node %d(--)\n", root->c);
+
+	print_huffman_tree(root->left, level + 1);
+	print_huffman_tree(root->right, level + 1);
+
+	if (level == 0)
+		printf("\n-----------\n  TREE END\n------------\n");
 }
 
-#endif // CODE_H
+#ifdef TEST
+
+int main()
+{
+	heapInit();
+
+	HeapInsert('a', NULL, 44);
+	HeapInsert('b', NULL, 32);
+	HeapInsert('d', NULL, 99);
+	HeapInsert('f', NULL, 43);
+	HeapInsert('u', NULL, 51);
+	HeapInsert('y', NULL, 1);
+	build_huffman_tree();
+	print_huffman_tree(huffman_tree, 0);
+	return 0;
+}
+
+#endif // TEST
