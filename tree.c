@@ -9,15 +9,6 @@ huffman_tree_node *huffman_tree = NULL;
  *
  **********************************************************************************************/
 
-int is_leaf(huffman_tree_node *root)
-{
-	if (root->left == NULL && root->right == NULL)
-	{
-		return 1;
-	}
-	return 0;
-}
-
 /*
  * Create a single tree node initialized with the given parameters
  */
